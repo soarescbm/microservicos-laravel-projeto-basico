@@ -11,5 +11,6 @@ yarn-error.log
 .idea
 /vendor
 /.env
-
+_ide_helper.php
+.phpstorm.meta.php
 
