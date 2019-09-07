@@ -6,13 +6,14 @@ services:
         build: .docker/app
         container_name: microservicos-video-app
         environment:
-          - DB_CONNECTION=mysql
-          - DB_HOST=db
-          - DB_PORT=3306
-          - DB_DATABASE=microservicos
-          - DB_USERNAME=root
-          - DB_PASSWORD=root
-        entrypoint: dockerize -template ./.docker/app/.env:.env -wait tcp://db:3306  -timeout 60s ./.docker/app/entrypoint.sh
+          - _DB_CONNECTION=mysql
+          - _DB_HOST=db
+          - _DB_PORT=3306
+          - _DB_DATABASE=microservicos_code_video
+          - _DB_DATABASE_TEST=microservicos_code_video_test
+          - _DB_USERNAME=root
+          - _DB_PASSWORD=root
+        entrypoint: dockerize -template ./.docker/app/.env:.env -template ./.docker/app/.env.testing:.env.testing  -wait tcp://db:3306  -timeout 60s ./.docker/app/entrypoint.sh
         volumes:
           - .:/var/www
         networks:
@@ -59,10 +60,11 @@ services:
         tty: true
         volumes:
           - ./.docker/dbdata:/var/lib/mysql
+          - ./.docker/mysql:/docker-entrypoint-initdb.d
         ports:
           - "3336:3306"
         environment:
-          - MYSQL_DATABASE=microservicos
+          - MYSQL_DATABASE=microservicos_code_video
           - MYSQL_ROOT_PASSWORD=root
           - MYSQL_ROOT=root
         networks:

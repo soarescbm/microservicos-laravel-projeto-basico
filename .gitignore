@@ -11,6 +11,7 @@ yarn-error.log
 .idea
 /vendor
 /.env
+/.env.testing
 _ide_helper.php
 .phpstorm.meta.php
 
