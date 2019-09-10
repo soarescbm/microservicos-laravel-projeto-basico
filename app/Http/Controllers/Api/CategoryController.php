@@ -23,6 +23,7 @@ class CategoryController extends Controller
     {
         $this->validate($request, $this->rules);
         $category =  Category::create($request->all());
+        $category->refresh();
         return $category;
     }
 
