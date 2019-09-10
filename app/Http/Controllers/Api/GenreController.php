@@ -22,6 +22,7 @@ class GenreController extends Controller
     {
         $this->validate($request, $this->rules);
         $genre =  Genre::create($request->all());
+        $genre->refresh();
         return $genre;
     }
 
