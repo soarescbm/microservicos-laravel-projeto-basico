@@ -128,6 +128,7 @@ class BasicCrudControllerTest extends TestCase
         $obj = $this->controller->destroy($category->id);
         $this->assertEquals($obj->getStatusCode(), 204);
 
+
     }
 
 }
