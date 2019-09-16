@@ -22,4 +22,7 @@ Route::namespace('Api')->group(function(){
 
     Route::resource('categories', 'CategoryController')->except(['create', 'edit']);
     Route::resource('genres', 'GenreController')->except(['create', 'edit']);
+    Route::resource('cast_members', 'CastMemberController')->except(['create', 'edit'])->parameters([
+        'cast_member' => 'id'
+    ]);
 });
