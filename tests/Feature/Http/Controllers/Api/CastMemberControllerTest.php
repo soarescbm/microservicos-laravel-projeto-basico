@@ -36,7 +36,7 @@ class CastMemberControllerTest extends TestCase
 
         $response = $this->get(route('cast_members.show', ['id' => $this->castMember->id]));
         $response->assertStatus(200)
-            ->assertJson($this->castMember->toArray());
+            ->assertJson([$this->castMember->toArray()]);
     }
 
     public function testInvalidateData()
@@ -123,17 +123,17 @@ class CastMemberControllerTest extends TestCase
     public function testDelete()
     {
 
-        $response = $this->json('delete', route('cast_members.destroy',  ['id' => $this->castMember->id]));
+        $response = $this->json('delete', route('cast_members.destroy',  ['cast_member' => $this->castMember->id]));
         $response->assertStatus(204);
 
 
-        $response = $this->get(route('cast_members.show', ['id' => $this->castMember->id]));
+        $response = $this->get(route('cast_members.show', ['cast_member' => $this->castMember->id]));
         $response->assertStatus(404);
 
 
         $this->castMember->restore();
 
-        $response = $this->get(route('cast_members.show', ['id' => $this->castMember->id]));
+        $response = $this->get(route('cast_members.show', ['cast_member' => $this->castMember->id]));
         $response->assertStatus(200)
             ->assertJson($this->castMember->toArray());
 
@@ -146,7 +146,7 @@ class CastMemberControllerTest extends TestCase
 
     protected function routeUpdate()
     {
-        return route('cast_members.update', ['id' => $this->castMember->id]);
+        return route('cast_members.update', ['cast_member' => $this->castMember->id]);
     }
 
     protected function model()
