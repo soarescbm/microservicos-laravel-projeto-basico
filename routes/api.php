@@ -25,4 +25,7 @@ Route::namespace('Api')->group(function(){
     Route::resource('cast_members', 'CastMemberController')->except(['create', 'edit'])->parameters([
         'cast_member' => 'id'
     ]);
+    Route::resource('videos', 'VideoController')->except(['create', 'edit'])->parameters([
+        'video' => 'id'
+    ]);
 });

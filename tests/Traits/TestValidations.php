@@ -42,7 +42,7 @@ trait TestValidations
 
             $response->assertJsonFragment(
                 [
-                    \Lang::trans("validation.{$rules}", ['attribute' => $fieldName] + $rulesParams)
+                    \Lang::get("validation.{$rules}", ['attribute' => $fieldName] + $rulesParams)
                 ]
             );
         }
