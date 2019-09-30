@@ -170,6 +170,7 @@ class VideoControllerTest extends TestCase
 
         $category = factory(Category::class)->create();
         $genre = factory(Genre::class)->create();
+        $genre->categories()->sync([$category->id]);
 
         $relations = ['categories_id' => [$category->id], 'genres_id' => [$genre->id]];
        // $relations = [];
@@ -237,6 +238,10 @@ class VideoControllerTest extends TestCase
 
         $request = \Mockery::mock(Request::class);
 
+        $request->shouldReceive('get')
+            ->withAnyArgs()
+            ->andReturn([]);
+
         $controller->shouldReceive('handleRelations')
             ->once()
             ->andThrow(new TestException());
@@ -274,6 +279,10 @@ class VideoControllerTest extends TestCase
 
 
         $request = \Mockery::mock(Request::class);
+
+        $request->shouldReceive('get')
+            ->withAnyArgs()
+            ->andReturn([]);
 
         $controller->shouldReceive('handleRelations')
             ->once()
@@ -345,7 +354,7 @@ class VideoControllerTest extends TestCase
         $genresId = $genres->pluck('id')->toArray();
         $categoryId = factory(Category::class)->create()->id;
         $genres->each(function ($genre) use ($categoryId) {
-            $genre->categories()->sync($categoryId);
+            $genre->categories()->sync([$categoryId]);
         });
 
 
