@@ -6,19 +6,24 @@ use App\Http\Controllers\Api\VideoController;
 use App\Model\Category;
 use App\Model\Genre;
 use App\Model\Video;
+use Doctrine\DBAL\Query\QueryException;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\TestResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\Exceptions\TestException;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\Traits\TestSaves;
+use Tests\Traits\TestUploads;
 use Tests\Traits\TestValidations;
 
 class VideoControllerTest extends TestCase
 {
-    use DatabaseMigrations, TestValidations, TestSaves;
+    use DatabaseMigrations, TestValidations, TestSaves, TestUploads;
+
 
     protected $video;
     private $sendData;
@@ -165,7 +170,7 @@ class VideoControllerTest extends TestCase
 
 
 
-    public function testSave()
+    public function testSaveWithoutFiles()
     {
 
         $category = factory(Category::class)->create();
@@ -222,80 +227,91 @@ class VideoControllerTest extends TestCase
         }
     }
 
-    public function testRollBackStore()
+    public function testStoreWithFiles()
     {
-        $controller = \Mockery::mock(VideoController::class)
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        Storage::fake();
+        $files = $this->getFiles();
+        $category = factory(Category::class)->create();
+        $genre = factory(Genre::class)->create();
+        $genre->categories()->sync([$category->id]);
+        $relations = ['categories_id' => [$category->id], 'genres_id' => [$genre->id]];
 
-        $controller->shouldReceive('validate')
-            ->withAnyArgs()
-            ->andReturn($this->sendData);
+        $response =  $this->json('POST', $this->routeStore(),
+          $this->sendData +
+           $relations +
+           $files);
 
-        $controller->shouldReceive('rulesStore')
-            ->withAnyArgs()
-            ->andReturn([]);
+        $response->assertStatus(201);
+        $id = $response->json('id');
+        foreach ($files as $file){
+            Storage::assertExists("$id/{$file->hashName()}");
+        }
 
-        $request = \Mockery::mock(Request::class);
 
-        $request->shouldReceive('get')
-            ->withAnyArgs()
-            ->andReturn([]);
+    }
 
-        $controller->shouldReceive('handleRelations')
-            ->once()
-            ->andThrow(new TestException());
+    public function testUpdateWithFiles()
+    {
+        Storage::fake();
+        $files = $this->getFiles();
+        $category = factory(Category::class)->create();
+        $genre = factory(Genre::class)->create();
+        $genre->categories()->sync([$category->id]);
+        $relations = ['categories_id' => [$category->id], 'genres_id' => [$genre->id]];
+
+        $response =  $this->json('POST', $this->routeStore(),
+            $this->sendData +
+            $relations +
+            $files);
+
+        $response->assertStatus(200);
+        $id = $response->json('id');
+        foreach ($files as $file){
+            Storage::assertExists("$id/{$file->hashName()}");
+        }
+
+
+    }
+
+    public function testRollBackCreate()
+    {
 
         $hasError = false;
         try {
-             $controller->store($request);
-        } catch (TestException $exception) {
+            Video::create( ['title' => 'title',
+            'description' => 'descriptin',
+            'year_launched' => 2019,
+            'rating' => Video::RATING_LIST[0],
+            'duration' => 9,
+            'categories_id' => [0,2,3,4]]
+            );
+        } catch (\Exception $exception) {
             $this->assertCount(1, Video::all());
             $hasError = true;
         }
 
         $this->assertTrue($hasError);
+
 
     }
 
     public function testRollBackUpdate()
     {
-        $controller = \Mockery::mock(VideoController::class)
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-
-        $controller->shouldReceive('validate')
-            ->withAnyArgs()
-            ->andReturn($this->sendData);
-
-        $controller->shouldReceive('rulesUpdate')
-            ->withAnyArgs()
-            ->andReturn([]);
-
-        $controller->shouldReceive('findOrFail')
-            ->withAnyArgs()
-            ->andReturn($this->video);
-
-
-
-        $request = \Mockery::mock(Request::class);
-
-        $request->shouldReceive('get')
-            ->withAnyArgs()
-            ->andReturn([]);
-
-        $controller->shouldReceive('handleRelations')
-            ->once()
-            ->andThrow(new TestException());
 
         $hasError = false;
         try {
-            $controller->update($request, 1);
-        } catch (TestException $exception) {
+           $this->video->update(['title' => 'title',
+                'description' => 'descriptin',
+                'year_launched' => 2019,
+                'rating' => Video::RATING_LIST[0],
+                'duration' => 9,
+                'categories_id' => [0,2,3,4,5]]);
+        } catch (\Exception $exception) {
             $this->assertCount(1, Video::all());
             $hasError = true;
         }
         $this->assertTrue($hasError);
+
     }
 
     public function testSyncCategories()
@@ -449,5 +465,21 @@ class VideoControllerTest extends TestCase
     protected function model()
     {
         return Video::class;
+    }
+
+    public function testValidationVideoFile()
+    {
+        $this->assertInvalidationFile(
+            'video_file',
+            'mp4',
+            '12',
+            'mimetypes', ['values' => 'video/mp4']
+        );
+
+    }
+
+    public function getFiles()
+    {
+        return ['video_file' => UploadedFile::fake()->create('video.mp4')];
     }
 }
