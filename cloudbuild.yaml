@@ -49,7 +49,7 @@ steps:
         name: 'gcr.io/cloud-builders/docker'
         args: ['exec', '-t', 'microservicos-video-app', 'php', 'artisan', 'migrate']
 
-    -   id: 'Rodando testing'
+    -   id: 'Rodando testing '
         name: 'gcr.io/cloud-builders/docker'
         args: ['exec', '-t', 'microservicos-video-app', 'php', '/var/www/vendor/bin/phpunit', '-c', '/var/www/phpunit.xml']
 
