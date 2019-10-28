@@ -4,7 +4,7 @@ namespace Tests\Traits;
 
 use Illuminate\Http\UploadedFile;
 
-trait  testUploads
+trait  TestUploads
 {
     public function assertInvalidationFile($field, $extesion, $maxSize, $rule, $ruleParans)
     {
