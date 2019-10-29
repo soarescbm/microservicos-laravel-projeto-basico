@@ -2,36 +2,54 @@
 
 steps:
 
-- id: "Rodando Docker Compose"
-  name: 'gcr.io/$PROJECT_ID/docker-compose'
-  args: ['-f', 'docker-compose.cloudbuild.yaml', 'up', '-d']
+    -   id: "Descriptografando chaves gcs"
+        name: 'gcr.io/cloud-builders/gcloud'
+        args:
+            - kms
+            - decrypt
+            - --ciphertext-file=./storage/credentials/google/service-account-storage.json.enc
+            - --plaintext-file=./storage/credentials/google/service-account-storage.json
+            - --location=global
+            - --keyring=testing
+            - --key=service-account
 
-- id: "Rodando o docker ps"
-  name: 'gcr.io/cloud-builders/docker'
-  args: ['ps']
+    -   id: "Rodando Docker Compose"
+        name: 'gcr.io/$PROJECT_ID/docker-compose'
+        args: ['-f', 'docker-compose.cloudbuild.yaml', 'up', '-d']
+        env:
+            - GOOGLE_CLOUD_PROJECT_ID=$PROJECT_ID
+            - GOOGLE_CLOUD_KEY_FILE=service-account-storage.json
+            - GOOGLE_CLOUD_STORAGE_BUCKET=microservicos-video-code
+            - GOOGLE_CLOUD_STORAGE_PATH_PREFIX=
+            - GOOGLE_CLOUD_STORAGE_API_URI=https://storage.googleapis.com/microservicos-video-code
+            - TESTING_PROD=true
 
-- id: 'Rodando o composer'
-  name: 'gcr.io/cloud-builders/docker'
-  args: ['exec', '-t', 'microservicos-video-app', 'composer', 'install']
+    -   id: "Rodando o docker ps"
+        name: 'gcr.io/cloud-builders/docker'
+        args: ['ps']
+
+    -   id: 'Rodando o composer'
+        name: 'gcr.io/cloud-builders/docker'
+        args: ['exec', '-t', 'microservicos-video-app', 'composer', 'install']
 
 
-- id: 'Copiando .env'
-  name: 'gcr.io/cloud-builders/docker'
-  args: ['exec', '-t', 'microservicos-video-app', 'cp', '.env.example', '.env']
+    -   id: 'Copiando .env'
+        name: 'gcr.io/cloud-builders/docker'
+        args: ['exec', '-t', 'microservicos-video-app', 'cp', '.env.example', '.env']
 
-- id: 'Copiando .env.testing'
-  name: 'gcr.io/cloud-builders/docker'
-  args: ['exec', '-t', 'microservicos-video-app', 'cp', '.env.testing.example', '.env.testing']
+    -   id: 'Copiando .env.testing'
+        name: 'gcr.io/cloud-builders/docker'
+        args: ['exec', '-t', 'microservicos-video-app', 'cp', '.env.testing.example', '.env.testing']
 
-- id: 'Gerando key'
-  name: 'gcr.io/cloud-builders/docker'
-  args: ['exec', '-t', 'microservicos-video-app', 'php', 'artisan', 'key:generate']
+    -   id: 'Gerando key'
+        name: 'gcr.io/cloud-builders/docker'
+        args: ['exec', '-t', 'microservicos-video-app', 'php', 'artisan', 'key:generate']
 
-- id: 'Rodando migrations'
-  name: 'gcr.io/cloud-builders/docker'
-  args: ['exec', '-t', 'microservicos-video-app', 'php', 'artisan', 'migrate']
+    -   id: 'Rodando migrations'
+        name: 'gcr.io/cloud-builders/docker'
+        args: ['exec', '-t', 'microservicos-video-app', 'php', 'artisan', 'migrate']
 
-- id: 'Rodando testing'
-  name: 'gcr.io/cloud-builders/docker'
-  args: ['exec', '-t', 'microservicos-video-app', 'php', '/var/www/vendor/bin/phpunit', '-c', '/var/www/phpunit.xml']
+    -   id: 'Rodando testing  '
+        name: 'gcr.io/cloud-builders/docker'
+        args: ['exec', '-t', 'microservicos-video-app', 'php', '/var/www/vendor/bin/phpunit', '-c', '/var/www/phpunit.xml']
 

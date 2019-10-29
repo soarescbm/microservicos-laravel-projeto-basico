@@ -4,10 +4,12 @@ FROM php:7.3.6-fpm-alpine3.9
 RUN apk add bash
 
 #dependencias mysql-client
-RUN apk add mysql-client
+RUN apk add mysql-client freetype-dev libjpeg-turbo-dev libpng-dev
 
 #extensao php install
 RUN docker-php-ext-install pdo pdo_mysql
+RUN docker-php-ext-configure gd --with-gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include --with-png-dir=/usr/include
+RUN docker-php-ext-install -j$(nproc) gd
 
 #dockerize
 RUN apk add --no-cache openssl
