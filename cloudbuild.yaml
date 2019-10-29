@@ -2,7 +2,7 @@
 
 steps:
 
-    -   id: "Descriptografando chaves gcs  "
+    -   id: "Descriptografando chaves gcs"
         name: 'gcr.io/cloud-builders/gcloud'
         args:
             - kms
