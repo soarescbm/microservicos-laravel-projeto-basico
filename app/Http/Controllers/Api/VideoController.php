@@ -21,7 +21,10 @@ class VideoController extends BasicCrudController
             'rating' => "required|in:" . implode(',', Video::RATING_LIST),
             'duration' => 'required|integer',
             'categories_id' => 'required|array|exists:categories,id,deleted_at,NULL',
-            'video_file' => 'nullable|mimetypes:video/mp4|max:12',
+            'video_file' => 'nullable|mimetypes:video/mp4|max:50000000',
+            'thumb_file' => 'nullable|mimetypes:image/jpeg,image/png|max:5000',
+            'banner_file' => 'nullable|mimetypes:image/jpeg,image/png|max:10000',
+            'trailer_file' => 'nullable|mimetypes:video/mp4|max:1000000',
             'genres_id' => [
                 'required',
                 'array',

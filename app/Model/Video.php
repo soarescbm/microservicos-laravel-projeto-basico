@@ -14,7 +14,6 @@ class Video extends Model
     const RATING_LIST = ['L', '10', '12', '14', '16',  '18'];
 
 
-
     protected $fillable = [
         'title',
         'description',
@@ -23,7 +22,9 @@ class Video extends Model
         'rating',
         'duration',
         'video_file',
-        'thumb_file'
+        'thumb_file',
+        'banner_file',
+        'trailer_file'
     ];
     protected $dates = ['deleted_at'];
     protected $casts = [
@@ -34,7 +35,27 @@ class Video extends Model
     ];
     public $incrementing = false;
 
-    public static $filesFields = ['video_file', 'thumb_file'];
+    public static $filesFields = ['video_file', 'thumb_file', 'banner_file', 'trailer_file'];
+
+    public function getVideoFileUrlAttribute()
+    {
+        return $this->getFileUrl($this->video_file);
+    }
+
+    public function getThumbFileUrlAttribute()
+    {
+        return $this->getFileUrl($this->thumb_file);
+    }
+
+    public function getBannerFileUrlAttribute()
+    {
+        return $this->getFileUrl($this->banner_file);
+    }
+
+    public function getTrailerFileUrlAttribute()
+    {
+        return $this->getFileUrl($this->trailer_file);
+    }
 
     public static function create(array $attributes = [])
     {
@@ -109,4 +130,6 @@ class Video extends Model
     {
         return $this->id;
     }
+
+
 }
