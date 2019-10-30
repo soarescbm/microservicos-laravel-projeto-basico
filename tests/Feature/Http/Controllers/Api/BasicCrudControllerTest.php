@@ -5,6 +5,7 @@ namespace Tests\Feature\Http\Controllers\Api;
 
 
 use App\Http\Controllers\Api\BasicCrudController;
+use App\Http\Resources\CategoryResource;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\TestResponse;
@@ -12,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Tests\Stubs\Controllers\CategoryControllerStub;
 use Tests\Stubs\Model\CategoryStub;
+use Tests\Stubs\Resources\CategoryResourceStub;
 use Tests\TestCase;
 use Tests\Traits\TestSaves;
 use Tests\Traits\TestValidations;
@@ -40,8 +42,10 @@ class BasicCrudControllerTest extends TestCase
     public function testIndex()
     {
         $category =  CategoryStub::create(['name' => 'test', 'description' => 'description', 'is_active' => false]);
-        $result = $this->controller->index()->toArray();
-        $this->assertEquals([$category->toArray()], $result);
+        $category->refresh();
+        $result = $this->controller->index();
+        $resource = CategoryResourceStub::collection(collect([$category]));
+        $this->assertEquals($resource->response()->getData(true)['data'], $result->response()->getData(true)['data']);
     }
 
 //    /**
@@ -68,7 +72,7 @@ class BasicCrudControllerTest extends TestCase
        $obj = $this->controller->store($request);
 
        $this->assertEquals(CategoryStub::find(1)->toArray(),
-           $obj->toArray());
+           $obj->response()->getData(true)['data']);
 
     }
 
@@ -109,7 +113,7 @@ class BasicCrudControllerTest extends TestCase
         $obj = $this->controller->update($request, $category->id);
 
         $this->assertEquals(CategoryStub::find($category->id)->toArray(),
-            $obj->toArray());
+            $obj->response()->getData(true)['data']);
 
     }
 
@@ -121,7 +125,7 @@ class BasicCrudControllerTest extends TestCase
         $obj = $this->controller->show($category->id);
 
         $this->assertEquals(CategoryStub::find($category->id)->toArray(),
-            $obj->toArray());
+            $obj->response()->getData(true)['data']);
 
     }
 
