@@ -6,6 +6,7 @@ namespace Tests\Stubs\Controllers;
 
 use App\Http\Controllers\Api\BasicCrudController;
 use Tests\Stubs\Model\CategoryStub;
+use Tests\Stubs\Resources\CategoryResourceStub;
 
 class CategoryControllerStub extends BasicCrudController
 {
@@ -31,5 +32,15 @@ class CategoryControllerStub extends BasicCrudController
             'descripiton' => 'nullable',
             'is_active' => 'boolean'
         ];
+    }
+
+    protected function resource()
+    {
+        return CategoryResourceStub::class;
+    }
+
+    protected function resourceCollection()
+    {
+        return $this->resource();
     }
 }

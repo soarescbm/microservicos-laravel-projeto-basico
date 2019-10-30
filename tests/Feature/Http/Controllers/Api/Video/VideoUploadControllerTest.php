@@ -29,7 +29,7 @@ class VideoUploadControllerTest extends VideoBaseControllerTestCase
             $files);
 
         $response->assertStatus(201);
-        $id = $response->json('id');
+        $id = $response->json('data.id');
         foreach ($files as $file){
             Storage::assertExists("$id/{$file->hashName()}");
         }
@@ -47,15 +47,15 @@ class VideoUploadControllerTest extends VideoBaseControllerTestCase
 
         $response =  $this->json('PUT', $this->routeUpdate(),
             $this->sendData +
-            $relations // +
-        //$files
+            $relations  +
+        $files
         );
 
 
         $response->assertStatus(200);
-        $id = $response->json('id');
+        $id = $response->json('data.id');
         foreach ($files as $file){
-            // Storage::assertExists("$id/{$file->hashName()}");
+             Storage::assertExists("$id/{$file->hashName()}");
         }
 
 

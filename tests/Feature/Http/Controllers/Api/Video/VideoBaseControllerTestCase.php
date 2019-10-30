@@ -7,15 +7,33 @@ namespace Tests\Feature\Http\Controllers\Api\Video;
 use App\Model\Video;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
+use Tests\Traits\TestResources;
 use Tests\Traits\TestSaves;
 use Tests\Traits\TestValidations;
 
 abstract class VideoBaseControllerTestCase extends TestCase
 {
-    use DatabaseMigrations, TestValidations, TestSaves;
+    use DatabaseMigrations, TestValidations, TestSaves, TestResources;
 
     protected $video;
     protected $sendData;
+
+    protected $serializedFields = [
+        'id',
+        'title',
+        'description',
+        'year_launched',
+        'opened',
+        'rating',
+        'duration',
+        'video_file',
+        'thumb_file',
+        'banner_file',
+        'trailer_file',
+        'created_at',
+        'deleted_at',
+        'updated_at'
+    ];
 
     public  function setUp(): void
     {

@@ -59,6 +59,7 @@ class CategoryTest extends TestCase
         $this->assertNull($category->description);
 
         $category = Category::create(['name' => 'test1', 'description' => 'test_description']);
+        $category->refresh();
         $this->assertEquals('test_description', $category->description);
 
         $category = Category::create(['name' => 'test1', 'is_active' => false]);
