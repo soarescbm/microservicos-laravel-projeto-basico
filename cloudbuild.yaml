@@ -31,8 +31,8 @@ steps:
 
     -   id: 'Rodando o composer'
         name: 'gcr.io/cloud-builders/docker'
-        dir: 'backend'
         args: ['exec', '-t', 'microservicos-video-app', 'ls']
+        dir: 'backend/'
 
 
     -   id: 'Copiando .env'
