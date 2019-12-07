@@ -28,13 +28,6 @@ steps:
         name: 'gcr.io/cloud-builders/docker'
         args: ['ps']
 
-    -   id: 'Sentando pasta de trabalho'
-        name: 'gcr.io/cloud-builders/docker'
-        args: ['exec', '-t', 'microservicos-video-app', 'cd', 'backend']
-
-    -   id: 'Rodando ls'
-        name: 'gcr.io/cloud-builders/docker'
-        args: ['exec', '-t', 'microservicos-video-app', 'ls']
 
     -   id: 'Rodando o composer'
         name: 'gcr.io/cloud-builders/docker'
