@@ -2,6 +2,8 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\Cors;
+use Barryvdh\Cors\HandleCors;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -14,11 +16,14 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $middleware = [
+        //Cors::class,
+       // HandleCors::class,
         \App\Http\Middleware\TrustProxies::class,
         \App\Http\Middleware\CheckForMaintenanceMode::class,
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+
     ];
 
     /**
@@ -38,8 +43,13 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
-            'throttle:60,1',
+
+             HandleCors::class,
+            'throttle:1000000,1',
             'bindings',
+
+
+
         ],
     ];
 

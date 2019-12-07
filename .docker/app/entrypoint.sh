@@ -1,5 +1,11 @@
 #!/bin/bash
 
+#FRONTEND
+npm config set cache /var/www/.npm-cache --global
+cd /var/www/frontand && npm install && cd ..
+
+#BACKEND
+cd backend
 composer install
 php artisan key:generate
 php artisan migrate

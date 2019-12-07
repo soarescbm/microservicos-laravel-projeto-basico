@@ -13,7 +13,11 @@ services:
           - _DB_DATABASE_TEST=microservicos_code_video_test
           - _DB_USERNAME=root
           - _DB_PASSWORD=root
-        entrypoint: dockerize -template ./.docker/app/.env:.env -template ./.docker/app/.env.testing:.env.testing  -wait tcp://db:3306  -timeout 60s ./.docker/app/entrypoint.sh
+          - CHOKIDAR_USEPOLLING=true
+        entrypoint: dockerize -template ./.docker/app/.env:backend/.env -template ./.docker/app/.env.testing:backend/.env.testing  -wait tcp://db:3306  -timeout 60s ./.docker/app/entrypoint.sh
+        ports:
+          - "3000:3000"
+          - "35729:35729"
         volumes:
           - .:/var/www
         networks:
