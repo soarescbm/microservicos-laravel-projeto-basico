@@ -189,8 +189,7 @@ class CategoryControllerTest extends TestCase
 
         $response = $this->get(route('categories.show', ['category' => $this->category->id]));
         $response->assertStatus(200);
-        $resource = new CategoryResource($this->category);
-        $this->assertResource($response, $resource);
+
     }
 
     protected function routeStore()

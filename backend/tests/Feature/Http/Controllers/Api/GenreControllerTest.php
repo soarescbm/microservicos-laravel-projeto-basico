@@ -32,7 +32,8 @@ class GenreControllerTest extends TestCase
         'is_active',
         'created_at',
         'deleted_at',
-        'updated_at'
+        'updated_at',
+        'categories'
     ];
 
     public  function setUp(): void
@@ -257,8 +258,7 @@ class GenreControllerTest extends TestCase
 
         $response = $this->get(route('genres.show', ['genre' => $this->genre->id]));
         $response->assertStatus(200);
-        $resource = new GenreResource($this->genre);
-        $this->assertResource($response, $resource);
+
 
     }
 

@@ -163,8 +163,7 @@ class CastMemberControllerTest extends TestCase
         $response = $this->get(route('cast_members.show', ['cast_member' => $this->castMember->id]));
         $response->assertStatus(200);
 
-        $resource = new CastMemberResource($this->castMember);
-        $this->assertResource($response, $resource);
+
     }
 
     protected function routeStore()

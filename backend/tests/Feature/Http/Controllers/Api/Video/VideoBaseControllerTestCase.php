@@ -32,7 +32,9 @@ abstract class VideoBaseControllerTestCase extends TestCase
         'trailer_file',
         'created_at',
         'deleted_at',
-        'updated_at'
+        'updated_at',
+        'categories',
+        'genres'
     ];
 
     public  function setUp(): void
