@@ -1,10 +1,10 @@
-FROM php:7.3.6-fpm-alpine3.9
+FROM php:7.3.6-fpm-alpine3.10
 
 #dependencias bash
 RUN apk add bash
 
 #dependencias mysql-client
-RUN apk add mysql-client freetype-dev libjpeg-turbo-dev libpng-dev
+RUN apk add mysql-client freetype-dev libjpeg-turbo-dev libpng-dev nodejs npm
 
 #extensao php install
 RUN docker-php-ext-install pdo pdo_mysql
@@ -28,7 +28,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 WORKDIR /var/www
 RUN rm -rf /var/www/html
 #COPY . /var/www
-RUN ln -s public html
+RUN ln -s backend/public html
 #RUN chown -R www-data:root /var/www
 #RUN chmod -R 777 /var/www
 #laravel config
