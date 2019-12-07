@@ -25,7 +25,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 
 
-WORKDIR /var/www
+WORKDIR /var/www/backend
 RUN rm -rf /var/www/html
 #COPY . /var/www
 RUN ln -s backend/public html
