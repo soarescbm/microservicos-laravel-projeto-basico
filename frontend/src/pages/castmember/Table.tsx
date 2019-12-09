@@ -6,6 +6,8 @@ import MUIDataTable, {MUIDataTableColumn, MUIDataTableColumnDef} from "mui-datat
 import {Chip} from "@material-ui/core";
 import format from "date-fns/format";
 import parseISO from "date-fns/parseISO";
+import categoryHttp from "../../util/http/category-http";
+import castMemberHttp from "../../util/http/cart-member-http";
 
 const CastMemberTypeMap = {
     1: 'Diretor',
@@ -38,7 +40,10 @@ const columnDefinitions: MUIDataTableColumn[] = [
 
 ];
 
-
+interface CastMember {
+    id: string,
+    name: string
+}
 
 
 type Props = {
@@ -46,12 +51,12 @@ type Props = {
 };
 const Table = (props: Props) => {
 
-    const [data, setData] = useState([]);
+    const [data, setData] = useState<CastMember[]>([]);
 
     useEffect(() => {
-        httpVideo.get('cast_members').then(
-                response => setData(response.data.data)
-             )
+        castMemberHttp.list<{data: CastMember[]}>().then(
+            response => setData(response.data.data)
+        )
     },[])
 
     return (
