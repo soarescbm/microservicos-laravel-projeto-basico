@@ -13,12 +13,13 @@ const PageList = () => {
 
         <Page title="Listagem Categorias">
 
-            <Box dir={'rtl'}>
+            <Box dir={'rtl'} paddingBottom={2} >
                 <Fab
                     title="Adicionar Categoria"
+                    color="secondary"
                     size="small"
                     component={Link}
-                    to="/category/list"
+                    to="/category/create"
                 >
                     <AddIcon/>
                 </Fab>

@@ -4,13 +4,16 @@ import logo from './logo.svg';
 import Button from "@material-ui/core/Button";
 import {Navbar} from "./components/Navbar";
 import {BrowserRouter} from "react-router-dom";
-import {Box} from "@material-ui/core";
+import {Box, MuiThemeProvider, CssBaseline} from "@material-ui/core";
 import AppRoute from "./routes/AppRoute";
 import Breadcrumbs from "./components/Breadcrumbs";
+import theme from "./theme";
 
 const App: React.FC = () => {
-  return (
-      <React.Fragment>
+    return (
+        <React.Fragment>
+            <MuiThemeProvider theme={theme}>
+            <CssBaseline/>
             <BrowserRouter>
                 <Navbar/>
                 <Box paddingTop={'100px'}>
@@ -18,8 +21,9 @@ const App: React.FC = () => {
                     <AppRoute/>
                 </Box>
             </BrowserRouter>
-      </React.Fragment>
-  );
+            </MuiThemeProvider>
+        </React.Fragment>
+    );
 }
 
 export default App;
